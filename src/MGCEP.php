@@ -52,24 +52,24 @@ class MGCEP
         $cached = $this->getCache($url, $this->cacheTTL);
 
         if ($cached !== null) {
-            return [$cached, null, true];
+            return [$cached, null];
         }
 
         $response = file_get_contents($url);
 
         if ($response === false) {
-            return [null, 'Erro ao acessar API', false];
+            return [null, 'Erro ao acessar API'];
         }
 
         $data = json_decode($response, true);
 
         if ($data === null) {
-            return [null, 'Erro ao decodificar JSON', false];
+            return [null, 'Erro ao decodificar JSON'];
         }
 
         $this->setCache($url, $data);
 
-        return [$data, null, false];
+        return [$data, null];
     }
 
     public function getCEP(string $cep):string|false {
