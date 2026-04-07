@@ -1,35 +1,174 @@
 # MGCEP
 
-## Compilação
+É uma biblioteca **leve e simples em PHP** para consulta de CEP utilizando a API pública do **ViaCEP**, com suporte a **cache local em arquivos** para melhorar desempenho e reduzir requisições externas.
 
-Para compilar e testar você irá precisar:
+Ideal para aplicações que precisam de **consultas rápidas de endereço**, com **baixo consumo de recursos** e **fácil integração**.
 
-- build-essential
-- nasm
-- gcc-x86-64-linux-gnu
-- qemu-system-x86
-- grub-common
-- grub-pc-bin
-- mtools
-- xorriso
+---
 
-Use os comandos abaixo para compilar e testar o MiOSLite.
+## ✨ Características
 
+* Consulta de CEP via **ViaCEP**
+* Cache local em arquivos (`.json`)
+* Configuração de tempo de cache (TTL)
+* API simples e direta
+* Zero dependências externas
+* Compatível com **PHP 8+**
+
+---
+
+## 📦 Instalação
+
+### Manual
+
+Copie a classe `MGCEP.php` para seu projeto e utilize via `require` ou autoload:
+
+```php
+composer require mugomes/mgcep;
 ```
-nasm -f elf32 src/boot.asm -o src/boot.o
-gcc -m32 -ffreestanding -fno-stack-protector -c src/kernel.c -o src/kernel.o
-ld -m elf_i386 -T linker.ld -o src/kernel.bin src/boot.o src/kernel.o
 
-mkdir -p build/boot/grub
-mkdir -p iso/
+---
 
-cp src/kernel.bin build/boot/
-cp src/boot/grub.cfg build/boot/grub/
+## ⚙️ Configuração
 
-grub-mkrescue -o iso/mioslite.iso build
+Antes de utilizar, é recomendado configurar o diretório de cache:
 
-qemu-system-x86_64 -cdrom iso/mioslite.iso
+```php
+use MGCEP\MGCEP;
+
+$cep = new MGCEP();
+$cep->setCacheDir(__DIR__ . '/cache');
 ```
+
+---
+
+## 📮 Consulta de CEP
+
+```php
+$erro = $cep->getCEP('01001000');
+
+if ($erro) {
+    echo $erro;
+} else {
+    echo $cep->getLogradouro();
+}
+```
+
+---
+
+## 🧠 Métodos Públicos
+
+### 📁 setCacheDir
+
+Define o diretório onde os arquivos de cache serão armazenados.
+
+```php
+$cep->setCacheDir('/caminho/do/cache');
+```
+
+**Parâmetros:**
+
+* `string $path` → Caminho do diretório
+* `int $permission` → Permissão (padrão: `0777`)
+
+---
+
+### ⏱️ setCacheTTL
+
+Define o tempo de vida do cache em segundos.
+
+```php
+$cep->setCacheTTL(3600); // 1 hora
+```
+
+---
+
+### 🔍 getCEP
+
+Realiza a consulta do CEP.
+
+```php
+$erro = $cep->getCEP('01001000');
+```
+
+**Retorno:**
+
+* `false` → Sucesso
+* `string` → Mensagem de erro
+
+---
+
+## 📍 Métodos de Dados
+
+Após uma consulta bem-sucedida (`getCEP`), os dados podem ser acessados:
+
+---
+
+### 🏠 Endereço
+
+```php
+$cep->getLogradouro();
+$cep->getComplemento();
+$cep->getUnidade();
+$cep->getBairro();
+```
+
+---
+
+### 🌆 Localização
+
+```php
+$cep->getLocalidade();
+$cep->getUF();
+$cep->getEstado();
+$cep->getRegiao();
+```
+
+---
+
+### 🏛️ Informações adicionais
+
+```php
+$cep->getIBGE();
+$cep->getGIA();
+$cep->getDDD();
+$cep->getSIAFI();
+```
+
+---
+
+## 💡 Exemplo completo
+
+```php
+use MGCEP\MGCEP;
+
+$cep = new MGCEP();
+$cep->setCacheDir(__DIR__ . '/cache');
+$cep->setCacheTTL(86400); // 1 dia
+
+$erro = $cep->getCEP('01001000');
+
+if ($erro) {
+    echo "Erro: $erro";
+    exit;
+}
+
+echo 'Rua: ' . $cep->getLogradouro() . PHP_EOL;
+echo 'Bairro: ' . $cep->getBairro() . PHP_EOL;
+echo 'Cidade: ' . $cep->getLocalidade() . PHP_EOL;
+echo 'UF: ' . $cep->getUF() . PHP_EOL;
+```
+
+---
+
+## ⚠️ Observações
+
+* É necessário chamar `getCEP()` antes de acessar os métodos de dados
+* O cache é baseado no **hash da URL**
+* Arquivos expirados são removidos automaticamente
+* Requer conexão com internet na primeira consulta
+
+---
 
 ## 💙 Apoie
 
@@ -40,7 +179,7 @@ qemu-system-x86_64 -cdrom iso/mioslite.iso
 
 **Murilo Gomes Julio**
 
-🔗 [https://mugomes.github.io](https://mugomes.github.io)
+🔗 [https://www.mugomes.com.br](https://www.mugomes.com.br)
 
 📺 [https://youtube.com/@mugomesoficial](https://youtube.com/@mugomesoficial)
 
@@ -48,10 +187,10 @@ qemu-system-x86_64 -cdrom iso/mioslite.iso
 
 ## License
 
-The MiOSLite is provided under:
+The MGCEP is provided under:
 
-[SPDX-License-Identifier: GPL-2.0-only](https://github.com/mugomes/mioslite/blob/main/LICENSE)
+[SPDX-License-Identifier: LGPL-2.1-only](https://github.com/mugomes/mgcep/blob/main/LICENSE)
 
-Beign under the terms of the GNU General Public License version 2 only.
+Beign under the terms of the GNU Lesser General Public License version 2.1 only.
 
-All contributions to the MiOSLite are subject to this license.
+All contributions to the MGCEP are subject to this license.
