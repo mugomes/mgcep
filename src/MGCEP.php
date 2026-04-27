@@ -2,7 +2,7 @@
 // Copyright (C) 2026 Murilo Gomes Julio
 // SPDX-License-Identifier: LGPL-2.1-only
 
-// Site: https://www.mugomes.com.br
+// Site: https://mugomes.github.io
 
 namespace MGCEP;
 
@@ -28,6 +28,10 @@ class MGCEP
 
     private function setCache(string $key, array $data)
     {
+        if (empty($this->cacheDir)) {
+            $this->setCacheDir(dirname(__FILE__, 2) . '/cache', 0755);
+        }
+        
         $filename = $this->cacheDir . '/' . md5($key) . '.json';
         file_put_contents($filename, json_encode($data), LOCK_EX);
     }
@@ -72,7 +76,7 @@ class MGCEP
         return [$data, null];
     }
 
-    public function getCEP(string $cep):string|false {
+    public function consultar(string $cep):string|false {
         $cep = preg_replace('/[^0-9]/', '', $cep);
 
         if (strlen($cep) !== 8) {
@@ -96,7 +100,7 @@ class MGCEP
         return false;
     }
 
-    public function getLogradouro():string {
+    public function getEndereco():string {
         return $this->dados['logradouro'];
     }
 
@@ -112,7 +116,7 @@ class MGCEP
         return $this->dados['bairro'];
     }
 
-    public function getLocalidade():string {
+    public function getCidade():string {
         return $this->dados['localidade'];
     }
 
