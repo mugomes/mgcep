@@ -5,10 +5,10 @@
     "authors": [
         {
             "name": "Murilo Gomes Julio",
-            "email": "mugomesoficial@gmail.com"
+            "email": "mugomesoficial@gmail.com",
+            "homepage": "https://mugomes.github.io"
         }
     ],
-    "homepage": "https://www.mugomes.com.br",
     "_comment": [
         "Copyright (C) 2026 Murilo Gomes Julio"
     ],
