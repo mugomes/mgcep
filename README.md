@@ -1,5 +1,8 @@
 # MGCEP
 
+> [!NOTE]
+> This repository has been migrated to Codeberg, please see: https://codeberg.org/bluice/mgcep/
+
 É uma biblioteca **leve e simples em PHP** para consulta de CEP utilizando a API pública do **ViaCEP**, com suporte a **cache local em arquivos** para melhorar desempenho e reduzir requisições externas.
 
 Ideal para aplicações que precisam de **consultas rápidas de endereço**, com **baixo consumo de recursos** e **fácil integração**.
